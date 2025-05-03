@@ -1,4 +1,5 @@
 # Importa il modulo `sys` per la gestione degli argomenti della riga di comando
+# Author: Bocaletto Luca
 import sys
 
 # Importa le classi e i moduli necessari da PyQt5 per la creazione dell'interfaccia utente
