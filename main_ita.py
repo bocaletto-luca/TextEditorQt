@@ -1,12 +1,11 @@
 # Importa il modulo `sys` per la gestione degli argomenti della riga di comando
-# Author: Bocaletto Luca
 import sys
 
 # Importa le classi e i moduli necessari da PyQt5 per la creazione dell'interfaccia utente
 from PyQt5.QtWidgets import (
     QApplication,
     QMainWindow,
-    QTextEdit,
+    QPlainTextEdit,
     QAction,
     QVBoxLayout,
     QWidget,
@@ -16,115 +15,113 @@ from PyQt5.QtWidgets import (
     QColorDialog,
     QInputDialog,
     QMessageBox,
-    QPlainTextEdit,
 )
-from PyQt5.QtGui import QTextCursor, QTextCharFormat, QTextBlockFormat, QTextFormat
+from PyQt5.QtGui import QTextCursor, QTextCharFormat, QFont
 from PyQt5.QtCore import Qt
 
 # Definizione della classe principale dell'editor di testo
-class TextEditor(QMainWindow):
+class EditorDiTesto(QMainWindow):
     def __init__(self):
         super().__init__()
-
         # Inizializza l'interfaccia utente
-        self.init_ui()
+        self.inizializza_ui()
 
-    def init_ui(self):
-        # Crea un'area di testo principale
-        self.text_edit = QPlainTextEdit(self)
-        self.setCentralWidget(self.text_edit)
+    def inizializza_ui(self):
+        # Crea l'area di testo principale
+        self.area_testo = QPlainTextEdit(self)
+        self.setCentralWidget(self.area_testo)
 
-        # Crea la barra del menu
-        menubar = self.menuBar()
-        file_menu = menubar.addMenu('File')
-        edit_menu = menubar.addMenu('Modifica')
-        format_menu = menubar.addMenu('Formato')
-        tools_menu = menubar.addMenu('Strumenti')
+        # Crea la barra dei menu
+        barra_menu = self.menuBar()
+        menu_file = barra_menu.addMenu('File')
+        menu_modifica = barra_menu.addMenu('Modifica')
+        menu_formato = barra_menu.addMenu('Formato')
+        menu_strumenti = barra_menu.addMenu('Strumenti')
 
         # Crea le azioni per il menu "File"
-        open_action = QAction('Apri', self)
-        open_action.setShortcut('Ctrl+O')
-        open_action.triggered.connect(self.open_file)
-        file_menu.addAction(open_action)
+        azione_apri = QAction('Apri', self)
+        azione_apri.setShortcut('Ctrl+O')
+        azione_apri.triggered.connect(self.apri_file)
+        menu_file.addAction(azione_apri)
 
-        save_action = QAction('Salva', self)
-        save_action.setShortcut('Ctrl+S')
-        save_action.triggered.connect(self.save_file)
-        file_menu.addAction(save_action)
+        azione_salva = QAction('Salva', self)
+        azione_salva.setShortcut('Ctrl+S')
+        azione_salva.triggered.connect(self.salva_file)
+        menu_file.addAction(azione_salva)
 
         # Crea le azioni per il menu "Modifica"
-        cut_action = QAction('Taglia', self)
-        cut_action.setShortcut('Ctrl+X')
-        cut_action.triggered.connect(self.text_edit.cut)
-        edit_menu.addAction(cut_action)
+        azione_taglia = QAction('Taglia', self)
+        azione_taglia.setShortcut('Ctrl+X')
+        azione_taglia.triggered.connect(self.area_testo.cut)
+        menu_modifica.addAction(azione_taglia)
 
-        copy_action = QAction('Copia', self)
-        copy_action.setShortcut('Ctrl+C')
-        copy_action.triggered.connect(self.text_edit.copy)
-        edit_menu.addAction(copy_action)
+        azione_copia = QAction('Copia', self)
+        azione_copia.setShortcut('Ctrl+C')
+        azione_copia.triggered.connect(self.area_testo.copy)
+        menu_modifica.addAction(azione_copia)
 
-        paste_action = QAction('Incolla', self)
-        paste_action.setShortcut('Ctrl+V')
-        paste_action.triggered.connect(self.text_edit.paste)
-        edit_menu.addAction(paste_action)
+        azione_incolla = QAction('Incolla', self)
+        azione_incolla.setShortcut('Ctrl+V')
+        azione_incolla.triggered.connect(self.area_testo.paste)
+        menu_modifica.addAction(azione_incolla)
 
-        undo_action = QAction('Annulla', self)
-        undo_action.setShortcut('Ctrl+Z')
-        undo_action.triggered.connect(self.text_edit.undo)
-        edit_menu.addAction(undo_action)
+        azione_annulla = QAction('Annulla', self)
+        azione_annulla.setShortcut('Ctrl+Z')
+        azione_annulla.triggered.connect(self.area_testo.undo)
+        menu_modifica.addAction(azione_annulla)
 
-        redo_action = QAction('Ripeti', self)
-        redo_action.setShortcut('Ctrl+Y')
-        redo_action.triggered.connect(self.text_edit.redo)
-        edit_menu.addAction(redo_action)
+        azione_ripeti = QAction('Ripeti', self)
+        azione_ripeti.setShortcut('Ctrl+Y')
+        azione_ripeti.triggered.connect(self.area_testo.redo)
+        menu_modifica.addAction(azione_ripeti)
 
         # Crea le azioni per il menu "Formato"
-        bold_action = QAction('Grassetto', self)
-        bold_action.setCheckable(True)
-        bold_action.triggered.connect(self.toggle_bold)
-        format_menu.addAction(bold_action)
+        azione_grassetto = QAction('Grassetto', self)
+        azione_grassetto.setCheckable(True)
+        azione_grassetto.triggered.connect(self.alterna_grassetto)
+        menu_formato.addAction(azione_grassetto)
 
-        italic_action = QAction('Corsivo', self)
-        italic_action.setCheckable(True)
-        italic_action.triggered.connect(self.toggle_italic)
-        format_menu.addAction(italic_action)
+        azione_corsivo = QAction('Corsivo', self)
+        azione_corsivo.setCheckable(True)
+        azione_corsivo.triggered.connect(self.alterna_corsivo)
+        menu_formato.addAction(azione_corsivo)
 
-        underline_action = QAction('Sottolineato', self)
-        underline_action.setCheckable(True)
-        underline_action.triggered.connect(self.toggle_underline)
-        format_menu.addAction(underline_action)
+        azione_sottolineato = QAction('Sottolineato', self)
+        azione_sottolineato.setCheckable(True)
+        azione_sottolineato.triggered.connect(self.alterna_sottolineato)
+        menu_formato.addAction(azione_sottolineato)
 
-        font_action = QAction('Cambia Carattere', self)
-        font_action.triggered.connect(self.change_font)
-        format_menu.addAction(font_action)
+        azione_cambia_carattere = QAction('Cambia Carattere', self)
+        azione_cambia_carattere.triggered.connect(self.cambia_carattere)
+        menu_formato.addAction(azione_cambia_carattere)
 
-        text_color_action = QAction('Colore del Testo', self)
-        text_color_action.triggered.connect(self.change_text_color)
-        format_menu.addAction(text_color_action)
+        azione_colore_testo = QAction('Colore del Testo', self)
+        azione_colore_testo.triggered.connect(self.cambia_colore_testo)
+        menu_formato.addAction(azione_colore_testo)
 
         # Crea le azioni per il menu "Strumenti"
-        find_replace_action = QAction('Trova e Sostituisci', self)
-        find_replace_action.setShortcut('Ctrl+F')
-        find_replace_action.triggered.connect(self.show_find_replace_dialog)
-        tools_menu.addAction(find_replace_action)
+        azione_trova_sostituisci = QAction('Trova e Sostituisci', self)
+        azione_trova_sostituisci.setShortcut('Ctrl+F')
+        azione_trova_sostituisci.triggered.connect(self.mostra_dialogo_trova_sostituisci)
+        menu_strumenti.addAction(azione_trova_sostituisci)
 
-        word_count_action = QAction('Conta Parole', self)
-        word_count_action.triggered.connect(self.count_words)
-        tools_menu.addAction(word_count_action)
+        azione_conta_parole = QAction('Conta Parole', self)
+        azione_conta_parole.triggered.connect(self.conta_parole)
+        menu_strumenti.addAction(azione_conta_parole)
 
         # Crea un pulsante "Salva"
-        save_button = QPushButton('Salva', self)
-        save_button.clicked.connect(self.save_file)
+        pulsante_salva = QPushButton('Salva', self)
+        pulsante_salva.clicked.connect(self.salva_file)
 
         # Crea un layout per l'interfaccia
         layout = QVBoxLayout()
-        layout.addWidget(self.text_edit)
-        layout.addWidget(save_button)
+        layout.addWidget(self.area_testo)
+        layout.addWidget(pulsante_salva)
 
-        container = QWidget()
-        container.setLayout(layout)
+        contenitore = QWidget()
+        contenitore.setLayout(layout)
 
-        self.setCentralWidget(container)
+        self.setCentralWidget(contenitore)
 
         # Imposta le dimensioni e il titolo della finestra principale
         self.setGeometry(100, 100, 800, 600)
@@ -132,87 +129,85 @@ class TextEditor(QMainWindow):
         self.show()
 
     # Metodo per aprire un file
-    def open_file(self):
-        options = QFileDialog.Options()
-        file_name, _ = QFileDialog.getOpenFileName(self, 'Apri File', '', 'File di Testo (*.txt);;Tutti i File (*)', options=options)
-
-        if file_name:
-            with open(file_name, 'r') as file:
-                self.text_edit.setPlainText(file.read())
+    def apri_file(self):
+        opzioni = QFileDialog.Options()
+        nome_file, _ = QFileDialog.getOpenFileName(self, 'Apri File', '', 'File di Testo (*.txt);;Tutti i File (*)', options=opzioni)
+        if nome_file:
+            with open(nome_file, 'r') as file:
+                self.area_testo.setPlainText(file.read())
 
     # Metodo per salvare un file
-    def save_file(self):
-        options = QFileDialog.Options()
-        file_name, _ = QFileDialog.getSaveFileName(self, 'Salva File', '', 'File di Testo (*.txt);;Tutti i File (*)', options=options)
-
-        if file_name:
-            with open(file_name, 'w') as file:
-                file.write(self.text_edit.toPlainText())
+    def salva_file(self):
+        opzioni = QFileDialog.Options()
+        nome_file, _ = QFileDialog.getSaveFileName(self, 'Salva File', '', 'File di Testo (*.txt);;Tutti i File (*)', options=opzioni)
+        if nome_file:
+            with open(nome_file, 'w') as file:
+                file.write(self.area_testo.toPlainText())
 
     # Metodo per attivare/disattivare il grassetto
-    def toggle_bold(self):
-        cursor = self.text_edit.textCursor()
-        format = QTextCharFormat()
-        format.setFontWeight(QFont.Bold if cursor.charFormat().fontWeight() == QFont.Normal else QFont.Normal)
-        cursor.mergeCharFormat(format)
-        self.text_edit.mergeCurrentCharFormat(format)
+    def alterna_grassetto(self):
+        cursore = self.area_testo.textCursor()
+        formato = QTextCharFormat()
+        formato.setFontWeight(QFont.Bold if cursore.charFormat().fontWeight() == QFont.Normal else QFont.Normal)
+        cursore.mergeCharFormat(formato)
+        self.area_testo.mergeCurrentCharFormat(formato)
 
     # Metodo per attivare/disattivare il corsivo
-    def toggle_italic(self):
-        cursor = self.text_edit.textCursor()
-        format = QTextCharFormat()
-        format.setFontItalic(not cursor.charFormat().fontItalic())
-        cursor.mergeCharFormat(format)
-        self.text_edit.mergeCurrentCharFormat(format)
+    def alterna_corsivo(self):
+        cursore = self.area_testo.textCursor()
+        formato = QTextCharFormat()
+        formato.setFontItalic(not cursore.charFormat().fontItalic())
+        cursore.mergeCharFormat(formato)
+        self.area_testo.mergeCurrentCharFormat(formato)
 
     # Metodo per attivare/disattivare il sottolineato
-    def toggle_underline(self):
-        cursor = self.text_edit.textCursor()
-        format = QTextCharFormat()
-        format.setFontUnderline(not cursor.charFormat().fontUnderline())
-        cursor.mergeCharFormat(format)
-        self.text_edit.mergeCurrentCharFormat(format)
+    def alterna_sottolineato(self):
+        cursore = self.area_testo.textCursor()
+        formato = QTextCharFormat()
+        formato.setFontUnderline(not cursore.charFormat().fontUnderline())
+        cursore.mergeCharFormat(formato)
+        self.area_testo.mergeCurrentCharFormat(formato)
 
     # Metodo per cambiare il tipo di carattere
-    def change_font(self):
+    def cambia_carattere(self):
         font, ok = QFontDialog.getFont()
         if ok:
-            cursor = self.text_edit.textCursor()
-            format = QTextCharFormat()
-            format.setFont(font)
-            cursor.mergeCharFormat(format)
-            self.text_edit.mergeCurrentCharFormat(format)
+            cursore = self.area_testo.textCursor()
+            formato = QTextCharFormat()
+            formato.setFont(font)
+            cursore.mergeCharFormat(formato)
+            self.area_testo.mergeCurrentCharFormat(formato)
 
     # Metodo per cambiare il colore del testo
-    def change_text_color(self):
-        color = QColorDialog.getColor()
-        if color.isValid():
-            cursor = self.text_edit.textCursor()
-            format = QTextCharFormat()
-            format.setForeground(color)
-            cursor.mergeCharFormat(format)
-            self.text_edit.mergeCurrentCharFormat(format)
+    def cambia_colore_testo(self):
+        colore = QColorDialog.getColor()
+        if colore.isValid():
+            cursore = self.area_testo.textCursor()
+            formato = QTextCharFormat()
+            formato.setForeground(colore)
+            cursore.mergeCharFormat(formato)
+            self.area_testo.mergeCurrentCharFormat(formato)
 
     # Metodo per mostrare la finestra di "Trova e Sostituisci"
-    def show_find_replace_dialog(self):
-        find_text, ok = QInputDialog.getText(self, 'Trova', 'Trova:')
+    def mostra_dialogo_trova_sostituisci(self):
+        testo_da_trovare, ok = QInputDialog.getText(self, 'Trova', 'Trova:')
         if ok:
-            cursor = self.text_edit.document().find(find_text)
-            if cursor.isNull():
+            cursore = self.area_testo.document().find(testo_da_trovare)
+            if cursore.isNull():
                 QMessageBox.information(self, 'Trova', 'Testo non trovato.')
             else:
-                self.text_edit.setTextCursor(cursor)
-                self.text_edit.setFocus()
+                self.area_testo.setTextCursor(cursore)
+                self.area_testo.setFocus()
 
     # Metodo per contare le parole nel testo
-    def count_words(self):
-        text = self.text_edit.toPlainText()
-        words = text.split()
-        word_count = len(words)
-        QMessageBox.information(self, 'Conteggio Parole', f'Il documento contiene {word_count} parole.')
+    def conta_parole(self):
+        testo = self.area_testo.toPlainText()
+        parole = testo.split()
+        numero_parole = len(parole)
+        QMessageBox.information(self, 'Conteggio Parole', f'Il documento contiene {numero_parole} parole.')
 
 # Punto di ingresso del programma
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    editor = TextEditor()
+    editor = EditorDiTesto()
     sys.exit(app.exec_())
