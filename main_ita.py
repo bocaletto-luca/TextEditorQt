@@ -1,3 +1,8 @@
+#!/usr/bin/env python3
+# Author: Bocaletto Luca
+# Programming Language: Python
+# Interface Language: English
+# License: GPLv3
 # Importa il modulo `sys` per la gestione degli argomenti della riga di comando
 import sys
 
