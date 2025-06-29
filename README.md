@@ -22,5 +22,13 @@ The user interface is designed to be intuitive, featuring a main window with a c
 ## Requirements
 
 To use this program, you must have Python installed on your system along with the PyQt5 framework. If PyQt5 is not installed, it can be easily added using the Python package manager `pip`:
-```bash
-pip install pyqt5
+
+    pip install pyqt5
+
+---
+
+**Maintainer Update**
+
+All legacy projects from the old `@Elektronoide` GitHub account are now officially maintained by **@bocaletto-luca**. Please direct any issues, pull requests, and stars to **@bocaletto-luca** for all future updates.
+
+---
