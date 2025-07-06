@@ -1,4 +1,7 @@
 # PyQt5 Text Editor with User Interface
+#### Author: Bocaoletto Luca
+
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue?style=for-the-badge&logo=gnu)](LICENSE) [![Python 3.6+](https://img.shields.io/badge/Python-3.6%2B-blue?style=for-the-badge&logo=python)](https://www.python.org/) [![Linux-Compatible](https://img.shields.io/badge/Linux-Compatible-blue?style=for-the-badge&logo=linux)](https://www.kernel.org/) [![Status: Complete](https://img.shields.io/badge/Status-Complete-brightgreen?style=for-the-badge)](https://github.com/bocaletto-luca/Directory-Monitor)
 
 This program is a simple text editor with an intuitive user interface, created using the PyQt5 framework for developing desktop applications in Python. The text editor provides many basic features expected from an editor, along with advanced functionalities such as text formatting.
 ![Screenshot 2023-10-07 185738](https://github.com/elektronoide/TextEditorQt/assets/134635227/ce5622f3-05f3-4732-b50f-4beba4bf905d)
